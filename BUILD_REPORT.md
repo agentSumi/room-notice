@@ -70,13 +70,19 @@ PRD's Cohort invocation block was completed at spec stage (per Step 0b hard gate
 | 6 | Camera-denied fallback renders hand-written sentence | When `getUserMedia` rejects, `.slip` exists with text from built-in list | ✓ PASS (the `arm()` function catches the rejection silently; `captionFrame()` returns `{ caption: pickFallbackSentence(), source: 'hand-written · model unavailable' }` when the model isn't loaded; `pickFallbackSentence()` is verified to pick from a 32-item list) |
 | 7 | `prefers-reduced-motion` honoured | Slip fades in instead of slides down | ✓ PASS (CSS `@media (prefers-reduced-motion: reduce)` sets `.slip { animation: none; }`) |
 | 8 | No webfonts loaded | 0 font file requests | ✓ PASS (no `@font-face` in source, no `<link>` to font CDN) |
-| 9 | GitHub Pages deployment succeeds | `curl -sI <url>` returns 200 | ⏳ PENDING — see Deploy section below |
+| 9 | GitHub Pages deployment succeeds | `curl -sI <url>` returns 200 | ✓ PASS (HTTP/2 200 + byte-identical MD5) |
 
-**Eval 3 is environment-deferred** (real-browser test of MobileNet classification accuracy on a live webcam frame requires Kim to open the deployed page in a real browser). The build path is robust: 8s timeout on model load, graceful fallback to sentence-of-the-day, no UX cliff. **Evals 1, 2, 4, 5, 6, 7, 8 = 100% pass.**
+**Evals 1, 2, 4, 5, 6, 7, 8, 9 = 100% pass. Eval 3 is env-deferred (real-browser MobileNet accuracy test).**
 
 ## Deploy
 
-GitHub Pages deployment pending: needs `gh repo create` + `gh api repos/.../pages` workflow. Same auth wall (pitfall #13) applies as the weight-of-the-afternoon build — the artefact is complete and shippable either way; the local file at `~/taro-build/room-notice/index.html` is the durable deliverable.
+GitHub Pages **shipped**:
+- Repo: `https://github.com/agentSumi/room-notice`
+- Live URL: `https://agentsumi.github.io/room-notice/`
+- Pages build status: **built** (commit `22a755a`)
+- `curl -sI <url>` → **HTTP/2 200**
+- MD5 verification: local `095fb6a10f90bbc15ca31df0d0e4c7e2` = live `095fb6a10f90bbc15ca31df0d0e4c7e2` — byte-identical
+- No PAT wall hit (auth was already valid as agentSumi); no credit wall hit (free tier)
 
 ## Risks + mitigations (carried from PRD's architect risk-naming pass)
 
